@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import {GoogleAuthProvider, getAuth, signInWithPopup, signOut} from "firebase/auth";
+import {GithubAuthProvider, GoogleAuthProvider, getAuth, signInWithPopup, signOut} from "firebase/auth";
 import app from '../../firbase/firbase.init';
 
 
@@ -7,6 +7,7 @@ const Login = () => {
     const [user , setUser] = useState(null);
     const auth = getAuth(app);
     const authProvider = new GoogleAuthProvider();
+    const GithubProvider = new GithubAuthProvider();
 
     const handelGoogleSignIn = () =>{
         signInWithPopup(auth, authProvider)
@@ -32,6 +33,17 @@ const Login = () => {
 
     }
 
+    const handelGitHubSignIn = () =>{
+        signInWithPopup(auth, GithubProvider)
+        .then(result =>{
+            const loggedInUser= result.user;
+            console.log(loggedInUser);
+            setUser(loggedInUser);
+        })
+        .catch(error =>{
+            console.log('Error: ', error.message);
+        })
+    }
     return (
         <div>
             {/* user ? logout : sign in */}
@@ -39,7 +51,10 @@ const Login = () => {
             
             {user ?
             <button onClick={handelSignOut}>Sign Out</button> :
-            <button onClick={handelGoogleSignIn}>Google login</button>
+            <div>
+                 <button onClick={handelGoogleSignIn}>Google login</button>
+                 <button onClick={handelGitHubSignIn}>GitHub</button>
+            </div>
             }
             {user && <div>
                <h1> User : {user?.displayName} </h1>
